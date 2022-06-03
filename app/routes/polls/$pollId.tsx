@@ -2,11 +2,11 @@ import type { ActionFunction, LoaderFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Form, useCatch, useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
-import type { Poll, Answer } from "~/models/poll.server";
+import type { Answer, Poll } from "~/models/poll.server";
 import { getAnswers } from "~/models/poll.server";
-import { getPoll, deletePoll, publishPoll } from "~/models/poll.server";
+import { deletePoll, getPoll, publishPoll } from "~/models/poll.server";
 import { requireUserId } from "~/session.server";
-import { useUser } from "~/utils";
+import { useUser } from "~/utils/utils";
 
 type LoaderData = {
   poll: Poll;

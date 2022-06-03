@@ -1,7 +1,6 @@
 import { Link } from "@remix-run/react";
 import { H } from "~/components/atoms/h";
-
-import { useOptionalUser } from "~/utils";
+import { useOptionalUser } from "~/utils/utils";
 
 export default function Index() {
   const user = useOptionalUser();

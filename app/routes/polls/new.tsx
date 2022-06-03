@@ -4,7 +4,6 @@ import { Form, useActionData } from "@remix-run/react";
 import * as React from "react";
 import { Input } from "~/components/atoms/input";
 import { TextArea } from "~/components/atoms/text-area";
-
 import { createAnswer, createPoll } from "~/models/poll.server";
 import { requireUserId } from "~/session.server";
 

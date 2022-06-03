@@ -1,10 +1,10 @@
 import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Form, Link, NavLink, Outlet, useLoaderData } from "@remix-run/react";
-
-import { requireUserId } from "~/session.server";
-import { useUser } from "~/utils";
+import { Container } from "~/components/atoms/container";
 import { getPollListItems } from "~/models/poll.server";
+import { requireUserId } from "~/session.server";
+import { useUser } from "~/utils/utils";
 
 type LoaderData = {
   pollListItems: Awaited<ReturnType<typeof getPollListItems>>;
@@ -21,7 +21,7 @@ export default function PollsPage() {
   const user = useUser();
 
   return (
-    <div>
+    <Container as="main">
       <header>
         <h1>
           <Link to=".">Polls</Link>
@@ -55,6 +55,6 @@ export default function PollsPage() {
           <Outlet />
         </div>
       </main>
-    </div>
+    </Container>
   );
 }

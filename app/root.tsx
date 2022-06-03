@@ -14,8 +14,8 @@ import {
   useLoaderData,
 } from "@remix-run/react";
 
-import globalStyle from "./styles/global.css";
 import { getUser } from "./session.server";
+import globalStyle from "./styles/global.css";
 import { getCssText } from "./styles/theme";
 
 export const links: LinksFunction = () => {

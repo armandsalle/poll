@@ -1,12 +1,12 @@
-import type { User } from "~/models/user.server";
 import type { ActionFunction, LoaderFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Form, useCatch, useLoaderData } from "@remix-run/react";
+import cookie from "cookie";
 import invariant from "tiny-invariant";
-import type { Poll, Answer } from "~/models/poll.server";
+import type { Answer, Poll } from "~/models/poll.server";
 import { vote } from "~/models/poll.server";
 import { getPublicPoll } from "~/models/poll.server";
-import cookie from "cookie";
+import type { User } from "~/models/user.server";
 
 type LoaderData = {
   poll: Pick<Poll, "body" | "updatedAt" | "title" | "id">;
