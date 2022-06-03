@@ -10,6 +10,7 @@ generator client {
 model User {
   id    String @id @default(cuid())
   email String @unique
+  name  String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -26,9 +27,10 @@ model Password {
 }
 
 model Poll {
-  id    String @id @default(cuid())
-  title String
-  body  String
+  id      String  @id @default(cuid())
+  title   String
+  body    String
+  publish Boolean @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

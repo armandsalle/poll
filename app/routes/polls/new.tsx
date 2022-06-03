@@ -2,8 +2,8 @@ import type { ActionFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Form, useActionData } from "@remix-run/react";
 import * as React from "react";
-import { Input } from "~/components/input";
-import { TextArea } from "~/components/text-area";
+import { Input } from "~/components/atoms/input";
+import { TextArea } from "~/components/atoms/text-area";
 
 import { createAnswer, createPoll } from "~/models/poll.server";
 import { requireUserId } from "~/session.server";
@@ -87,6 +87,8 @@ export default function NewPollPage() {
     }
 
     setAnswers((answers) => [...answers, value]);
+
+    newAnswerRef.current.value = "";
   };
 
   return (
@@ -128,12 +130,8 @@ export default function NewPollPage() {
           Add answer
         </button>
 
-        <div className="text-right">
-          <button
-            type="submit"
-            className="rounded bg-blue-500 py-2 px-4 text-white hover:bg-blue-600 focus:bg-blue-400"
-            form="main-form"
-          >
+        <div>
+          <button type="submit" form="main-form">
             Save
           </button>
         </div>

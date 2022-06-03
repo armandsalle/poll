@@ -51,9 +51,18 @@ export function getPollListItems({ userId }: { userId: User["id"] }) {
   });
 }
 
-export function getPoll({ id }: Pick<Poll, "id">) {
+export function getPoll({ id, userId }: Pick<Poll, "id" | "userId">) {
   return prisma.poll.findFirst({
-    where: { id },
+    where: { id, userId },
+    include: {
+      Answer: {
+        select: {
+          count: true,
+          id: true,
+          title: true,
+        },
+      },
+    },
   });
 }
 
@@ -71,5 +80,58 @@ export function deletePoll({
 }: Pick<Poll, "id"> & { userId: User["id"] }) {
   return prisma.poll.deleteMany({
     where: { id, userId },
+  });
+}
+
+export function vote({ id }: Pick<Answer, "id">) {
+  return prisma.answer.update({
+    where: {
+      id,
+    },
+    data: {
+      count: {
+        increment: 1,
+      },
+    },
+  });
+}
+
+export function getPublicPoll({ id }: Pick<Poll, "id">) {
+  return prisma.poll.findFirst({
+    where: { id, publish: true },
+    select: {
+      body: true,
+      id: true,
+      title: true,
+      updatedAt: true,
+      Answer: {
+        select: {
+          count: true,
+          id: true,
+          title: true,
+        },
+      },
+      user: {
+        select: {
+          name: true,
+        },
+      },
+    },
+  });
+}
+
+export function publishPoll({
+  id,
+  userId,
+  newState,
+}: Pick<Poll, "id" | "userId"> & { newState: boolean }) {
+  return prisma.poll.updateMany({
+    where: {
+      id,
+      userId,
+    },
+    data: {
+      publish: newState,
+    },
   });
 }

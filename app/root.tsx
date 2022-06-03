@@ -11,13 +11,15 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLoaderData,
 } from "@remix-run/react";
 
-import tailwindStylesheetUrl from "./styles/tailwind.css";
+import globalStyle from "./styles/global.css";
 import { getUser } from "./session.server";
+import { getCssText } from "./styles/theme";
 
 export const links: LinksFunction = () => {
-  return [{ rel: "stylesheet", href: tailwindStylesheetUrl }];
+  return [{ rel: "stylesheet", href: globalStyle }];
 };
 
 export const meta: MetaFunction = () => ({
@@ -28,22 +30,27 @@ export const meta: MetaFunction = () => ({
 
 type LoaderData = {
   user: Awaited<ReturnType<typeof getUser>>;
+  css: string;
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
   return json<LoaderData>({
     user: await getUser(request),
+    css: getCssText(),
   });
 };
 
 export default function App() {
+  const { css } = useLoaderData() as LoaderData;
+
   return (
-    <html lang="en" className="h-full">
+    <html lang="en">
       <head>
         <Meta />
         <Links />
+        <style id="stitches">{css}</style>
       </head>
-      <body className="h-full">
+      <body>
         <Outlet />
         <ScrollRestoration />
         <Scripts />
