@@ -14,6 +14,7 @@ import {
   useLoaderData,
 } from "@remix-run/react";
 
+import { Navbar } from "./components/organisms/navbar";
 import { getUser } from "./session.server";
 import globalStyle from "./styles/global.css";
 import { getCssText } from "./styles/theme";
@@ -51,6 +52,7 @@ export default function App() {
         <style id="stitches">{css}</style>
       </head>
       <body>
+        <Navbar />
         <Outlet />
         <ScrollRestoration />
         <Scripts />

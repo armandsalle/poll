@@ -1,12 +1,11 @@
 import type { ActionFunction, LoaderFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import { Form, useCatch, useLoaderData } from "@remix-run/react";
+import { Form, Link, useCatch, useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
 import type { Answer, Poll } from "~/models/poll.server";
 import { getAnswers } from "~/models/poll.server";
 import { deletePoll, getPoll, publishPoll } from "~/models/poll.server";
 import { requireUserId } from "~/session.server";
-import { useUser } from "~/utils/utils";
 
 type LoaderData = {
   poll: Poll;
@@ -74,7 +73,6 @@ export const action: ActionFunction = async ({ request, params }) => {
 export default function PollDetailsPage() {
   const data = useLoaderData() as LoaderData;
   // const transition = useTransition();
-  const user = useUser();
 
   return (
     <div>
@@ -87,6 +85,15 @@ export default function PollDetailsPage() {
         </p>
       ))}
       <hr />
+      {data.poll.publish && (
+        <Link
+          to={`/p/${data.poll.id}`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          See the poll
+        </Link>
+      )}
       <Form method="post">
         <input
           type="hidden"
@@ -97,13 +104,12 @@ export default function PollDetailsPage() {
           Publish : {data.poll.publish ? "Yes" : "No"}
         </button>
       </Form>
-      {user && (
-        <Form method="post">
-          <button type="submit" name="_action" value="delete">
-            Delete
-          </button>
-        </Form>
-      )}
+
+      <Form method="post">
+        <button type="submit" name="_action" value="delete">
+          Delete
+        </button>
+      </Form>
     </div>
   );
 }

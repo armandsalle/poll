@@ -72,3 +72,8 @@ export function validateEmail(email: unknown): email is string {
 export function validateName(name: unknown): name is string {
   return typeof name === "string" && name.length > 2;
 }
+
+export function getVotePercentage(count: number, totalVote: number) {
+  const result = (count * 100) / totalVote;
+  return isNaN(result) ? 0 : result;
+}

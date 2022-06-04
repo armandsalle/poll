@@ -1,10 +1,9 @@
 import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { Form, Link, NavLink, Outlet, useLoaderData } from "@remix-run/react";
+import { Link, NavLink, Outlet, useLoaderData } from "@remix-run/react";
 import { Container } from "~/components/atoms/container";
 import { getPollListItems } from "~/models/poll.server";
 import { requireUserId } from "~/session.server";
-import { useUser } from "~/utils/utils";
 
 type LoaderData = {
   pollListItems: Awaited<ReturnType<typeof getPollListItems>>;
@@ -18,43 +17,26 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 export default function PollsPage() {
   const data = useLoaderData() as LoaderData;
-  const user = useUser();
 
   return (
     <Container as="main">
-      <header>
-        <h1>
-          <Link to=".">Polls</Link>
-        </h1>
-        <p>{user.email}</p>
-        <Form action="/logout" method="post">
-          <button type="submit">Logout</button>
-        </Form>
-      </header>
+      <div>
+        <Link to="new">+ New Poll</Link>
 
-      <main>
-        <div>
-          <Link to="new">+ New Poll</Link>
+        {data.pollListItems.length === 0 ? (
+          <p>No polls yet</p>
+        ) : (
+          <ol>
+            {data.pollListItems.map((poll) => (
+              <li key={poll.id}>
+                <NavLink to={poll.id}>📝 {poll.title}</NavLink>
+              </li>
+            ))}
+          </ol>
+        )}
+      </div>
 
-          <hr />
-
-          {data.pollListItems.length === 0 ? (
-            <p>No polls yet</p>
-          ) : (
-            <ol>
-              {data.pollListItems.map((poll) => (
-                <li key={poll.id}>
-                  <NavLink to={poll.id}>📝 {poll.title}</NavLink>
-                </li>
-              ))}
-            </ol>
-          )}
-        </div>
-
-        <div>
-          <Outlet />
-        </div>
-      </main>
+      <Outlet />
     </Container>
   );
 }

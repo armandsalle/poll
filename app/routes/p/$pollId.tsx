@@ -3,10 +3,12 @@ import { json, redirect } from "@remix-run/node";
 import { Form, useCatch, useLoaderData } from "@remix-run/react";
 import cookie from "cookie";
 import invariant from "tiny-invariant";
+import { Container } from "~/components/atoms/container";
 import type { Answer, Poll } from "~/models/poll.server";
 import { vote } from "~/models/poll.server";
 import { getPublicPoll } from "~/models/poll.server";
 import type { User } from "~/models/user.server";
+import { getVotePercentage } from "~/utils/utils";
 
 type LoaderData = {
   poll: Pick<Poll, "body" | "updatedAt" | "title" | "id">;
@@ -78,7 +80,7 @@ export default function PollDetailsPage() {
 
   // vote pour chaque option * 100 / total des votes
   return (
-    <div>
+    <Container as="main">
       <h3>
         {data.poll.title} by {data.user.name}
       </h3>
@@ -104,11 +106,11 @@ export default function PollDetailsPage() {
             }}
           >
             {answer.title} - {answer.count} -{" "}
-            <b>{(answer.count * 100) / data.totalVote}%</b>
+            <b>{getVotePercentage(answer.count, data.totalVote)}%</b>
           </button>
         </Form>
       ))}
-    </div>
+    </Container>
   );
 }
 

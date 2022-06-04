@@ -1,8 +1,12 @@
 import type { ActionFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Form, useActionData } from "@remix-run/react";
-import * as React from "react";
+import { nanoid } from "nanoid";
+import type { FormEvent } from "react";
+import { useEffect, useRef } from "react";
+import { useImmer } from "use-immer";
 import { Input } from "~/components/atoms/input";
+import { Outlet } from "~/components/atoms/outlet";
 import { TextArea } from "~/components/atoms/text-area";
 import { createAnswer, createPoll } from "~/models/poll.server";
 import { requireUserId } from "~/session.server";
@@ -52,6 +56,9 @@ export const action: ActionFunction = async ({ request }) => {
 
   await Promise.all(
     answers.map(async (answer) => {
+      if (typeof answer !== "string" || answer.length === 0) {
+        return;
+      }
       await createAnswer({ title: answer.toString(), pollId: poll.id });
     })
   );
@@ -59,14 +66,19 @@ export const action: ActionFunction = async ({ request }) => {
   return redirect(`/polls/${poll.id}`);
 };
 
+type answer = {
+  id: string;
+  value: string;
+};
+
 export default function NewPollPage() {
   const actionData = useActionData() as ActionData;
-  const titleRef = React.useRef<HTMLInputElement>(null);
-  const bodyRef = React.useRef<HTMLTextAreaElement>(null);
-  const newAnswerRef = React.useRef<HTMLInputElement>(null);
-  const [answers, setAnswers] = React.useState<string[]>([]);
+  const titleRef = useRef<HTMLInputElement>(null);
+  const bodyRef = useRef<HTMLTextAreaElement>(null);
+  const answerInput = useRef<HTMLInputElement>(null);
+  const [answers, setAnswers] = useImmer<answer[]>([]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (actionData?.errors?.title) {
       titleRef.current?.focus();
     } else if (actionData?.errors?.body) {
@@ -74,20 +86,22 @@ export default function NewPollPage() {
     }
   }, [actionData]);
 
-  const handleAddAnswerForm = (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => {
-    const value = newAnswerRef.current?.value;
-
-    if (!value) return;
+  const handleAddAnswerForm = (e: FormEvent<HTMLFormElement>) => {
+    const data = new FormData(e.currentTarget);
+    const value = data.get("answer");
 
     if (typeof value !== "string" || value.length === 0) {
       return;
     }
 
-    setAnswers((answers) => [...answers, value]);
+    setAnswers((draft) => {
+      draft.push({ id: nanoid(), value });
+    });
 
-    newAnswerRef.current.value = "";
+    if (answerInput.current) {
+      answerInput.current.value = "";
+      answerInput.current.focus();
+    }
   };
 
   return (
@@ -112,29 +126,61 @@ export default function NewPollPage() {
           name="body"
           hasError={actionData?.errors?.body}
         />
-
         {answers.map((answer) => {
           return (
             <input
-              readOnly
-              key={answer.trim().split(" ").join("-")}
+              type="hidden"
+              key={answer.id}
               name="answers"
-              value={answer}
+              value={answer.value}
             />
           );
         })}
-
-        <Input name="answer" ref={newAnswerRef} />
-        <button type="button" onClick={handleAddAnswerForm}>
-          Add answer
-        </button>
-
-        <div>
-          <button type="submit" form="main-form">
-            Save
-          </button>
-        </div>
       </Form>
+
+      <Form
+        id="answer-form"
+        onSubmit={(event) => {
+          event.preventDefault();
+          handleAddAnswerForm(event);
+        }}
+      >
+        <Outlet vertical={8}>
+          {answers.map((answer, i) => {
+            return (
+              <label key={i}>
+                <input
+                  name="answers"
+                  value={answer.value}
+                  onChange={(e) =>
+                    setAnswers((draft) => {
+                      const i = draft.findIndex((v) => v.id === answer.id);
+                      draft[i].value = e.target.value;
+                    })
+                  }
+                />
+                <button
+                  type="button"
+                  onClick={() => {
+                    setAnswers((draft) => {
+                      const i = draft.findIndex((v) => v.id === answer.id);
+                      draft.splice(i, 1);
+                    });
+                  }}
+                >
+                  delete
+                </button>
+              </label>
+            );
+          })}
+        </Outlet>
+        <Input name="answer" ref={answerInput} />
+        <button type="submit">Add answer</button>
+      </Form>
+
+      <button type="submit" form="main-form">
+        Save
+      </button>
     </>
   );
 }
