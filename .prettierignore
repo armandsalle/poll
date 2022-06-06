@@ -1,5 +1,7 @@
 node_modules
 
+postgres-data
+
 /build
 /public/build
 .env

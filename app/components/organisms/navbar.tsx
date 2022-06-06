@@ -18,7 +18,7 @@ export function Navbar() {
           {user ? (
             <>
               <Link to="/polls">Dashboard</Link>
-              <p>{user.name}</p>
+              <Link to="/user/profile">{user.name}</Link>
               <Form action="/logout" method="post">
                 <button type="submit">Logout</button>
               </Form>

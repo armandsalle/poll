@@ -1,5 +1,5 @@
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -7,16 +7,25 @@ generator client {
   provider = "prisma-client-js"
 }
 
+enum ROLE {
+  ADMIN
+  USER
+}
+
 model User {
-  id    String @id @default(cuid())
-  email String @unique
-  name  String
+  id               String    @id @default(cuid())
+  email            String    @unique
+  name             String
+  role             ROLE      @default(USER)
+  password         Password?
+  sessions         Session[]
+  confirmedEmail   Boolean   @default(false)
+  confirmedEmailAt DateTime?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  password Password?
-  polls    Poll[]
+  polls Poll[]
 }
 
 model Password {
@@ -26,11 +35,19 @@ model Password {
   userId String @unique
 }
 
+model Session {
+  id             String   @id @default(uuid())
+  createdAt      DateTime @default(now())
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId         String
+  expirationDate DateTime
+}
+
 model Poll {
   id      String  @id @default(cuid())
   title   String
   body    String
-  publish Boolean @default(false)
+  publish Boolean @default(true)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -38,7 +55,7 @@ model Poll {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId String
 
-  Answer Answer[]
+  answers Answer[]
 }
 
 model Answer {

@@ -54,7 +54,7 @@ export function getPoll({ id, userId }: Pick<Poll, "id" | "userId">) {
   return prisma.poll.findFirst({
     where: { id, userId },
     include: {
-      Answer: {
+      answers: {
         select: {
           count: true,
           id: true,
@@ -103,7 +103,7 @@ export function getPublicPoll({ id }: Pick<Poll, "id">) {
       id: true,
       title: true,
       updatedAt: true,
-      Answer: {
+      answers: {
         select: {
           count: true,
           id: true,
@@ -131,6 +131,17 @@ export function publishPoll({
     },
     data: {
       publish: newState,
+    },
+  });
+}
+
+export function getPollPublishStatus({ id }: Pick<Poll, "id">) {
+  return prisma.poll.findUnique({
+    where: {
+      id,
+    },
+    select: {
+      publish: true,
     },
   });
 }

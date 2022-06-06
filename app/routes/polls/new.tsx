@@ -9,7 +9,7 @@ import { Input } from "~/components/atoms/input";
 import { Outlet } from "~/components/atoms/outlet";
 import { TextArea } from "~/components/atoms/text-area";
 import { createAnswer, createPoll } from "~/models/poll.server";
-import { requireUserId } from "~/session.server";
+import { requireUserId } from "~/plugins/session.server";
 
 type ActionData = {
   errors?: {

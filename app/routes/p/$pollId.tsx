@@ -3,16 +3,17 @@ import { json, redirect } from "@remix-run/node";
 import { Form, useCatch, useLoaderData } from "@remix-run/react";
 import cookie from "cookie";
 import invariant from "tiny-invariant";
-import { Container } from "~/components/atoms/container";
 import type { Answer, Poll } from "~/models/poll.server";
 import { vote } from "~/models/poll.server";
-import { getPublicPoll } from "~/models/poll.server";
+import { getPollPublishStatus, getPublicPoll } from "~/models/poll.server";
 import type { User } from "~/models/user.server";
 import { getVotePercentage } from "~/utils/utils";
 
+type _Answer = Pick<Answer, "count" | "id" | "title">;
+
 type LoaderData = {
   poll: Pick<Poll, "body" | "updatedAt" | "title" | "id">;
-  answers: Pick<Answer, "count" | "id" | "title">[];
+  answers: Array<_Answer & { votesPercent: number }>;
   user: Pick<User, "name">;
   vote?: string;
   totalVote: number;
@@ -37,13 +38,20 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
   const vote = cookies[params.pollId];
 
-  const totalVote = poll.Answer.reduce<number>((prev, current) => {
+  const totalVote = poll.answers.reduce<number>((prev, current) => {
     return current.count + prev;
   }, 0);
 
+  const answersWithPercentageVote = poll.answers.map((answer) => {
+    return {
+      ...answer,
+      votesPercent: getVotePercentage(answer.count, totalVote),
+    };
+  });
+
   return json<LoaderData>({
     poll,
-    answers: poll.Answer,
+    answers: answersWithPercentageVote,
     user: poll.user,
     vote,
     totalVote,
@@ -63,6 +71,12 @@ export const action: ActionFunction = async ({ request, params }) => {
     );
   }
 
+  const isPollPublish = await getPollPublishStatus({ id });
+
+  if (!isPollPublish) {
+    return redirect(".");
+  }
+
   await vote({ id });
 
   return redirect("/p/" + params.pollId, {
@@ -78,9 +92,8 @@ export default function PollDetailsPage() {
   const data = useLoaderData() as LoaderData;
   const userHasVoted = data.answers.some((answer) => data.vote === answer.id);
 
-  // vote pour chaque option * 100 / total des votes
   return (
-    <Container as="main">
+    <section>
       <h3>
         {data.poll.title} by {data.user.name}
       </h3>
@@ -105,12 +118,11 @@ export default function PollDetailsPage() {
               textDecoration: data.vote === answer.id ? "underline" : "none",
             }}
           >
-            {answer.title} - {answer.count} -{" "}
-            <b>{getVotePercentage(answer.count, data.totalVote)}%</b>
+            {answer.title} - {answer.count} - <b>{answer.votesPercent}%</b>
           </button>
         </Form>
       ))}
-    </Container>
+    </section>
   );
 }
 

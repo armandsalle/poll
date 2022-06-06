@@ -5,7 +5,7 @@ import invariant from "tiny-invariant";
 import type { Answer, Poll } from "~/models/poll.server";
 import { getAnswers } from "~/models/poll.server";
 import { deletePoll, getPoll, publishPoll } from "~/models/poll.server";
-import { requireUserId } from "~/session.server";
+import { requireUserId } from "~/plugins/session.server";
 
 type LoaderData = {
   poll: Poll;

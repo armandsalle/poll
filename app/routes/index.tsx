@@ -1,5 +1,5 @@
-import { Container } from "~/components/atoms/container";
+import { H } from "~/components/atoms/h";
 
 export default function Index() {
-  return <Container as="main">hello</Container>;
+  return <H>hello</H>;
 }

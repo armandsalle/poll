@@ -15,7 +15,7 @@ async function seed() {
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  const rachal = await prisma.user.create({
+  const admin = await prisma.user.create({
     data: {
       name,
       email,
@@ -24,6 +24,8 @@ async function seed() {
           hash: hashedPassword,
         },
       },
+      confirmedEmail: true,
+      confirmedEmailAt: new Date(),
     },
   });
 
@@ -31,7 +33,7 @@ async function seed() {
     data: {
       title: "Do you have a floof?",
       body: "Floofs are squeeshy",
-      userId: rachal.id,
+      userId: admin.id,
     },
   });
 

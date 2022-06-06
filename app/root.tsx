@@ -11,11 +11,11 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
-  useLoaderData,
 } from "@remix-run/react";
 
+import { Container } from "./components/atoms/container";
 import { Navbar } from "./components/organisms/navbar";
-import { getUser } from "./session.server";
+import { getUser } from "./plugins/session.server";
 import globalStyle from "./styles/global.css";
 import { getCssText } from "./styles/theme";
 
@@ -31,29 +31,30 @@ export const meta: MetaFunction = () => ({
 
 type LoaderData = {
   user: Awaited<ReturnType<typeof getUser>>;
-  css: string;
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
   return json<LoaderData>({
     user: await getUser(request),
-    css: getCssText(),
   });
 };
 
 export default function App() {
-  const { css } = useLoaderData() as LoaderData;
-
   return (
     <html lang="en">
       <head>
         <Meta />
         <Links />
-        <style id="stitches">{css}</style>
+        <style
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{ __html: getCssText() }}
+        />
       </head>
       <body>
         <Navbar />
-        <Outlet />
+        <Container>
+          <Outlet />
+        </Container>
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
