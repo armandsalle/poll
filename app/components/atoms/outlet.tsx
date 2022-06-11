@@ -70,6 +70,17 @@ const StyledOutlet = styled("div", {
         justifyContent: "space-between",
       },
     },
+    align: {
+      center: {
+        alignItems: "center",
+      },
+      start: {
+        alignItems: "flex-start",
+      },
+      end: {
+        alignItems: "flex-end",
+      },
+    },
   },
 });
 

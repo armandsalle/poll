@@ -25,7 +25,7 @@ export function Navbar() {
             </>
           ) : (
             <>
-              <Link to="/join">Sign up</Link>
+              <Link to="/register">Sign up</Link>
               <Link to="/login">Log In</Link>
             </>
           )}

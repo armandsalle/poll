@@ -12,15 +12,25 @@ enum ROLE {
   USER
 }
 
+model UserRegistration {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
+  code      String
+  valid     Boolean  @default(false)
+}
+
 model User {
-  id               String    @id @default(cuid())
-  email            String    @unique
-  name             String
-  role             ROLE      @default(USER)
-  password         Password?
-  sessions         Session[]
-  confirmedEmail   Boolean   @default(false)
-  confirmedEmailAt DateTime?
+  id       String    @id @default(cuid())
+  email    String    @unique
+  name     String
+  role     ROLE      @default(USER)
+  password Password?
+  sessions Session[]
+
+  confirmToken     String?
+  confirmedEmail   Boolean  @default(false)
+  confirmedEmailAt DateTime @default(now())
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

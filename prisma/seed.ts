@@ -14,18 +14,19 @@ async function seed() {
   });
 
   const hashedPassword = await bcrypt.hash(password, 10);
+  const confirmToken = "";
 
   const admin = await prisma.user.create({
     data: {
       name,
       email,
+      confirmToken,
+      confirmedEmail: true,
       password: {
         create: {
           hash: hashedPassword,
         },
       },
-      confirmedEmail: true,
-      confirmedEmailAt: new Date(),
     },
   });
 

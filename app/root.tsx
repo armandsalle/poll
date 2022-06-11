@@ -45,10 +45,10 @@ export default function App() {
       <head>
         <Meta />
         <Links />
-        <style
+        {/* <style
           suppressHydrationWarning
           dangerouslySetInnerHTML={{ __html: getCssText() }}
-        />
+        /> */}
       </head>
       <body>
         <Navbar />
