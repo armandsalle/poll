@@ -111,12 +111,10 @@ Prior to your first deployment, you'll need to do a few things:
   ```sh
   fly postgres create --name poll-template-db
   fly postgres attach --postgres-app poll-template-db --app poll-template
+
+  fly postgres create --name poll-template-staging-db
+  fly postgres attach --postgres-app poll-template-staging-db --app poll-template-staging
   ```
-
-fly postgres create --name poll-template-staging-db
-fly postgres attach --postgres-app poll-template-staging-db --app poll-template-staging
-
-````
 
 Fly will take care of setting the DATABASE_URL secret for you.
 
@@ -147,7 +145,7 @@ We have a utility for testing authenticated features without having to go throug
 ```ts
 cy.login();
 // you are now logged in as a new user
-````
+```
 
 We also have a utility to auto-delete the user at the end of your test. Just make sure to add this in each test file:
 
