@@ -4,15 +4,16 @@ import { Stack } from "./stack";
 
 type TextAreaProps = {
   name: string;
+  label: string;
   hasError?: string;
 };
 
 export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
-  ({ name, hasError }, ref) => {
+  ({ label, name, hasError }, ref) => {
     return (
       <div>
         <Stack as="label" vertical={4} align="start">
-          <span>{name}: </span>
+          <span>{label}: </span>
           <textarea
             ref={ref}
             name="body"

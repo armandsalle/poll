@@ -19,7 +19,7 @@ export default function PollsPage() {
   const data = useLoaderData() as LoaderData;
 
   return (
-    <section>
+    <Stack vertical={16} align="start">
       <Stack vertical={16} align="start">
         <Link to="new">+ New Poll</Link>
 
@@ -37,6 +37,6 @@ export default function PollsPage() {
       </Stack>
 
       <Outlet />
-    </section>
+    </Stack>
   );
 }

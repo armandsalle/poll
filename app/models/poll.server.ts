@@ -59,6 +59,10 @@ export function getPoll({ id, userId }: Pick<Poll, "id" | "userId">) {
           count: true,
           id: true,
           title: true,
+          index: true,
+        },
+        orderBy: {
+          index: "asc",
         },
       },
     },
@@ -107,7 +111,11 @@ export function getPublicPoll({ id }: Pick<Poll, "id">) {
         select: {
           count: true,
           id: true,
+          index: true,
           title: true,
+        },
+        orderBy: {
+          index: "asc",
         },
       },
       user: {

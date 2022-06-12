@@ -54,14 +54,16 @@ export const action: ActionFunction = async ({ request }) => {
     userId,
   });
 
-  await Promise.all(
-    answers.map(async (answer) => {
-      if (typeof answer !== "string" || answer.length === 0) {
-        return;
-      }
-      await createAnswer({ title: answer.toString(), pollId: poll.id });
-    })
-  );
+  const m = async (answer: FormDataEntryValue) => {
+    if (typeof answer !== "string" || answer.length === 0) {
+      return;
+    }
+    await createAnswer({ title: answer.toString(), pollId: poll.id });
+  };
+
+  answers.forEach((answer) => {
+    m(answer);
+  });
 
   return redirect(`/polls/${poll.id}`);
 };
@@ -105,7 +107,7 @@ export default function NewPollPage() {
   };
 
   return (
-    <>
+    <Stack vertical={16} align="start">
       <Form
         id="main-form"
         method="post"
@@ -121,8 +123,10 @@ export default function NewPollPage() {
           ref={titleRef}
           name="title"
           hasError={actionData?.errors?.title}
+          autoFocus
         />
         <TextArea
+          label="Description"
           ref={bodyRef}
           name="body"
           hasError={actionData?.errors?.body}
@@ -146,42 +150,46 @@ export default function NewPollPage() {
           handleAddAnswerForm(event);
         }}
       >
-        <Stack vertical={8}>
-          {answers.map((answer, i) => {
-            return (
-              <label key={i}>
-                <input
-                  name="answers"
-                  value={answer.value}
-                  onChange={(e) =>
-                    setAnswers((draft) => {
-                      const i = draft.findIndex((v) => v.id === answer.id);
-                      draft[i].value = e.target.value;
-                    })
-                  }
-                />
-                <button
-                  type="button"
-                  onClick={() => {
-                    setAnswers((draft) => {
-                      const i = draft.findIndex((v) => v.id === answer.id);
-                      draft.splice(i, 1);
-                    });
-                  }}
-                >
-                  delete
-                </button>
-              </label>
-            );
-          })}
+        <Stack vertical={8} align="start">
+          {answers.length > 0 && (
+            <Stack vertical={8}>
+              {answers.map((answer, i) => {
+                return (
+                  <label key={i}>
+                    <input
+                      name="answers"
+                      value={answer.value}
+                      onChange={(e) =>
+                        setAnswers((draft) => {
+                          const i = draft.findIndex((v) => v.id === answer.id);
+                          draft[i].value = e.target.value;
+                        })
+                      }
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setAnswers((draft) => {
+                          const i = draft.findIndex((v) => v.id === answer.id);
+                          draft.splice(i, 1);
+                        });
+                      }}
+                    >
+                      delete
+                    </button>
+                  </label>
+                );
+              })}
+            </Stack>
+          )}
+          <Input label="Answer" name="answer" ref={answerInput} />
+          <button type="submit">Add answer</button>
         </Stack>
-        <Input label="Answer" name="answer" ref={answerInput} />
-        <button type="submit">Add answer</button>
       </Form>
 
       <button type="submit" form="main-form">
-        Save
+        Save the poll
       </button>
-    </>
+    </Stack>
   );
 }

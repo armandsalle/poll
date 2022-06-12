@@ -71,10 +71,10 @@ export const action: ActionFunction = async ({ request, params }) => {
     );
   }
 
-  const isPollPublish = await getPollPublishStatus({ id });
+  const isPollPublish = await getPollPublishStatus({ id: params.pollId });
 
   if (!isPollPublish) {
-    return redirect(".");
+    return redirect("/");
   }
 
   await vote({ id });

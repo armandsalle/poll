@@ -48,6 +48,8 @@ model User {
 }
 
 model Password {
+  createdAt DateTime @default(now())
+
   hash String
 
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
@@ -78,9 +80,12 @@ model Poll {
 }
 
 model Answer {
-  id    String @id @default(cuid())
-  title String
-  count Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  id        String   @id @default(cuid())
+  title     String
+  count     Int
+  index     Int      @default(autoincrement())
 
   poll   Poll   @relation(fields: [pollId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   pollId String

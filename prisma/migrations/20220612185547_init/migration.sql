@@ -2,6 +2,27 @@
 CREATE TYPE "ROLE" AS ENUM ('ADMIN', 'USER');
 
 -- CreateTable
+CREATE TABLE "UserRegistration" (
+    "id" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "code" TEXT NOT NULL,
+    "valid" BOOLEAN NOT NULL DEFAULT false,
+
+    CONSTRAINT "UserRegistration_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "NewPasswordRequest" (
+    "id" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "token" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+
+    CONSTRAINT "NewPasswordRequest_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "User" (
     "id" TEXT NOT NULL,
     "email" TEXT NOT NULL,
@@ -18,6 +39,7 @@ CREATE TABLE "User" (
 
 -- CreateTable
 CREATE TABLE "Password" (
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "hash" TEXT NOT NULL,
     "userId" TEXT NOT NULL
 );
@@ -47,6 +69,8 @@ CREATE TABLE "Poll" (
 
 -- CreateTable
 CREATE TABLE "Answer" (
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
     "id" TEXT NOT NULL,
     "title" TEXT NOT NULL,
     "count" INTEGER NOT NULL,
@@ -56,10 +80,16 @@ CREATE TABLE "Answer" (
 );
 
 -- CreateIndex
+CREATE UNIQUE INDEX "UserRegistration_email_key" ON "UserRegistration"("email");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Password_userId_key" ON "Password"("userId");
+
+-- AddForeignKey
+ALTER TABLE "NewPasswordRequest" ADD CONSTRAINT "NewPasswordRequest_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Password" ADD CONSTRAINT "Password_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
