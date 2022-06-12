@@ -6,7 +6,7 @@ import type { FormEvent } from "react";
 import { useEffect, useRef } from "react";
 import { useImmer } from "use-immer";
 import { Input } from "~/components/atoms/input";
-import { Outlet } from "~/components/atoms/outlet";
+import { Stack } from "~/components/atoms/stack";
 import { TextArea } from "~/components/atoms/text-area";
 import { createAnswer, createPoll } from "~/models/poll.server";
 import { requireUserId } from "~/plugins/session.server";
@@ -146,7 +146,7 @@ export default function NewPollPage() {
           handleAddAnswerForm(event);
         }}
       >
-        <Outlet vertical={8}>
+        <Stack vertical={8}>
           {answers.map((answer, i) => {
             return (
               <label key={i}>
@@ -174,7 +174,7 @@ export default function NewPollPage() {
               </label>
             );
           })}
-        </Outlet>
+        </Stack>
         <Input label="Answer" name="answer" ref={answerInput} />
         <button type="submit">Add answer</button>
       </Form>

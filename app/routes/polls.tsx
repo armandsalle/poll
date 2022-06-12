@@ -1,6 +1,7 @@
 import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Link, NavLink, Outlet, useLoaderData } from "@remix-run/react";
+import { Stack } from "~/components/atoms/stack";
 import { getPollListItems } from "~/models/poll.server";
 import { requireUserId } from "~/plugins/session.server";
 
@@ -19,7 +20,7 @@ export default function PollsPage() {
 
   return (
     <section>
-      <div>
+      <Stack vertical={16} align="start">
         <Link to="new">+ New Poll</Link>
 
         {data.pollListItems.length === 0 ? (
@@ -33,7 +34,7 @@ export default function PollsPage() {
             ))}
           </ol>
         )}
-      </div>
+      </Stack>
 
       <Outlet />
     </section>

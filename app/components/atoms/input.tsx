@@ -1,7 +1,7 @@
 import type { ComponentProps } from "react";
 import { forwardRef } from "react";
 
-import { Outlet } from "./outlet";
+import { Stack } from "./stack";
 
 type InputProps = ComponentProps<"input"> & {
   label: string;
@@ -14,7 +14,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ label, name, hasError, ...rest }, ref) => {
     return (
       <div>
-        <Outlet as="label" vertical={4} align="start">
+        <Stack as="label" vertical={4} align="start">
           <span>{label}: </span>
           <input
             ref={ref}
@@ -23,7 +23,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             aria-errormessage={hasError ? "title-error" : undefined}
             {...rest}
           />
-        </Outlet>
+        </Stack>
         {hasError && <div id="title-error">{hasError}</div>}
       </div>
     );

@@ -13,7 +13,7 @@ import {
 } from "@remix-run/react";
 import { H } from "~/components/atoms/h";
 import { Input } from "~/components/atoms/input";
-import { Outlet } from "~/components/atoms/outlet";
+import { Stack } from "~/components/atoms/stack";
 import {
   createUserRegistration,
   getUserByEmail,
@@ -195,7 +195,7 @@ export default function Register() {
   const [searchParams] = useSearchParams();
 
   return (
-    <Outlet vertical={32} align="start">
+    <Stack vertical={32} align="start">
       <H>Register</H>
       <Form method="post">
         <Input
@@ -247,6 +247,6 @@ export default function Register() {
           </Link>
         </div>
       </div>
-    </Outlet>
+    </Stack>
   );
 }

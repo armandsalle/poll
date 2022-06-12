@@ -1,6 +1,6 @@
 import { forwardRef } from "react";
 
-import { Outlet } from "./outlet";
+import { Stack } from "./stack";
 
 type TextAreaProps = {
   name: string;
@@ -11,7 +11,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
   ({ name, hasError }, ref) => {
     return (
       <div>
-        <Outlet as="label" vertical={4} align="start">
+        <Stack as="label" vertical={4} align="start">
           <span>{name}: </span>
           <textarea
             ref={ref}
@@ -20,7 +20,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
             aria-invalid={hasError ? true : undefined}
             aria-errormessage={hasError ? "body-error" : undefined}
           />
-        </Outlet>
+        </Stack>
         {hasError && <div id="body-error">{hasError}</div>}
       </div>
     );

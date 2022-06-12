@@ -51,7 +51,7 @@ const verticalGaps = Object.entries(GAPS).reduce<G>((obj, [key, value]) => {
   return obj;
 }, {} as any as G);
 
-const StyledOutlet = styled("div", {
+const StyledStack = styled("div", {
   display: "flex",
   variants: {
     horizontal: horizontalGaps,
@@ -84,12 +84,12 @@ const StyledOutlet = styled("div", {
   },
 });
 
-type OutletProps = WithChildren<
-  VariantProps<typeof StyledOutlet> & {
+type StackProps = WithChildren<
+  VariantProps<typeof StyledStack> & {
     as?: ElementType;
   }
 >;
 
-export function Outlet({ children, ...rest }: OutletProps) {
-  return <StyledOutlet {...rest}>{children}</StyledOutlet>;
+export function Stack({ children, ...rest }: StackProps) {
+  return <StyledStack {...rest}>{children}</StyledStack>;
 }

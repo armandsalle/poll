@@ -3,18 +3,18 @@ import { useOptionalUser } from "~/utils/utils";
 
 import { Container } from "../atoms/container";
 import { H } from "../atoms/h";
-import { Outlet } from "../atoms/outlet";
+import { Stack } from "../atoms/stack";
 
 export function Navbar() {
   const user = useOptionalUser();
   return (
     <Container as="nav">
-      <Outlet horizontal={0} justify="spaceBetween">
+      <Stack horizontal={0} justify="spaceBetween">
         <Link to="/">
           <H>Polls</H>
         </Link>
 
-        <Outlet horizontal={8}>
+        <Stack horizontal={8}>
           {user ? (
             <>
               <Link to="/polls">Dashboard</Link>
@@ -29,8 +29,8 @@ export function Navbar() {
               <Link to="/login">Log In</Link>
             </>
           )}
-        </Outlet>
-      </Outlet>
+        </Stack>
+      </Stack>
     </Container>
   );
 }

@@ -3,7 +3,7 @@ import { json, redirect } from "@remix-run/node";
 import { Form, useActionData, useTransition } from "@remix-run/react";
 import { useEffect, useRef } from "react";
 import { Input } from "~/components/atoms/input";
-import { Outlet } from "~/components/atoms/outlet";
+import { Stack } from "~/components/atoms/stack";
 import { updateUserPassword } from "~/models/new-password.server";
 import {
   deleteUserByEmail,
@@ -119,14 +119,14 @@ export default function Profile() {
   }, [isChangePasswordSuccess]);
 
   return (
-    <Outlet vertical={32} as="section">
+    <Stack vertical={32} as="section">
       <Form method="post">
         <button type="submit" name="_action" value="delete">
           Delete account
         </button>
       </Form>
       <Form method="post" ref={newPasswordFormRef}>
-        <Outlet vertical={8} align="start">
+        <Stack vertical={8} align="start">
           <Input
             label="Current password"
             name="current-password"
@@ -143,8 +143,8 @@ export default function Profile() {
             Change password
           </button>
           {actionData?.newPassword && <p>{actionData.newPassword}</p>}
-        </Outlet>
+        </Stack>
       </Form>
-    </Outlet>
+    </Stack>
   );
 }
