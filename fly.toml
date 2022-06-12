@@ -1,6 +1,6 @@
 # fly.toml file generated for poll on 2022-06-12T22:03:02+02:00
 
-app = "poll"
+app = "poll-template"
 kill_signal = "SIGINT"
 kill_timeout = 5
 processes = []
