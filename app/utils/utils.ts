@@ -77,3 +77,7 @@ export function getVotePercentage(count: number, totalVote: number) {
   const result = (count * 100) / totalVote;
   return isNaN(result) ? 0 : result;
 }
+
+export function isValidString(s: unknown): s is string {
+  return typeof s === "string";
+}

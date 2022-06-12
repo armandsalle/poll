@@ -117,6 +117,7 @@ export default function NewPollPage() {
         }}
       >
         <Input
+          label="Title"
           ref={titleRef}
           name="title"
           hasError={actionData?.errors?.title}
@@ -174,7 +175,7 @@ export default function NewPollPage() {
             );
           })}
         </Outlet>
-        <Input name="answer" ref={answerInput} />
+        <Input label="Answer" name="answer" ref={answerInput} />
         <button type="submit">Add answer</button>
       </Form>
 

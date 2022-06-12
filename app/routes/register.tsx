@@ -199,6 +199,7 @@ export default function Register() {
       <H>Register</H>
       <Form method="post">
         <Input
+          label="Email"
           name="email"
           hasError={actionData?.errors?.email}
           defaultValue={loaderData?.email}
@@ -215,8 +216,14 @@ export default function Register() {
 
       {loaderData?.showCode && (
         <Form method="post" action={"/register?" + searchParams.toString()}>
-          <Input type="hidden" name="email" value={loaderData?.email} />
           <Input
+            label="email"
+            type="hidden"
+            name="email"
+            value={loaderData?.email}
+          />
+          <Input
+            label="Code"
             name="code"
             hasError={actionData?.errors?.code}
             aria-required

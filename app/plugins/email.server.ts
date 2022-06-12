@@ -3,6 +3,7 @@ import type { UserRegistration } from "@prisma/client";
 const EMAIL_TEMPLATES = {
   verifyEmail: "pxkjn41mpr94z781",
   welcomeEmail: "351ndgwvypnlzqx8",
+  resetPassword: "vywj2lpnk6pg7oqz",
 };
 
 const mailersendURL = process.env.MAILERSEND_API_URL || "";
@@ -23,7 +24,7 @@ export async function sendWelcomeEmail(email: string, name: string) {
       body: JSON.stringify({
         from: {
           email: "hello@armand-salle.fr",
-          name: "Armand confirmation",
+          name: "Armand",
         },
         to: [
           {
@@ -81,7 +82,7 @@ export async function sendEmailVerification(
       body: JSON.stringify({
         from: {
           email: "hello@armand-salle.fr",
-          name: "Armand confirmation",
+          name: "Armand",
         },
         to: [
           {
@@ -99,6 +100,57 @@ export async function sendEmailVerification(
                 var: "code",
                 value: code,
               },
+              {
+                var: "url",
+                value: href,
+              },
+            ],
+          },
+        ],
+      }),
+    });
+
+    console.log(resp.ok, resp.status);
+  } catch (error) {
+    if (error instanceof Error) {
+      console.log(error.message);
+      return;
+    }
+    console.log(error);
+  }
+}
+
+export async function sendResetPassword(email: string, token: string) {
+  const url = new URL(globalUrl + "/new-password/");
+  url.searchParams.append("email", email);
+  url.searchParams.append("token", token);
+  const href = url.href;
+
+  try {
+    const resp = await fetch(mailersendURL, {
+      method: "POST",
+      headers: new Headers({
+        "X-Requested-With": "XMLHttpRequest",
+        "Content-type": "application/json",
+        Authorization: "Bearer " + process.env.MAILERSEND_API_KEY,
+      }),
+      body: JSON.stringify({
+        from: {
+          email: "hello@armand-salle.fr",
+          name: "Armand",
+        },
+        to: [
+          {
+            email,
+            name: email,
+          },
+        ],
+        subject: "Reset password!",
+        template_id: EMAIL_TEMPLATES.resetPassword,
+        variables: [
+          {
+            email,
+            substitutions: [
               {
                 var: "url",
                 value: href,

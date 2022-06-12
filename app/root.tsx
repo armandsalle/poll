@@ -52,7 +52,7 @@ export default function App() {
       </head>
       <body>
         <Navbar />
-        <Container>
+        <Container css={{ marginTop: 32 }}>
           <Outlet />
         </Container>
         <ScrollRestoration />

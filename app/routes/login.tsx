@@ -6,6 +6,7 @@ import type {
 import { json, redirect } from "@remix-run/node";
 import { Form, Link, useActionData, useSearchParams } from "@remix-run/react";
 import * as React from "react";
+import { H } from "~/components/atoms/h";
 import { verifyLogin } from "~/models/user.server";
 import { createUserSession, getUserId } from "~/plugins/session.server";
 import { safeRedirect, validateEmail } from "~/utils/utils";
@@ -92,6 +93,7 @@ export default function LoginPage() {
   return (
     <div>
       <div>
+        <H>Login</H>
         <Form method="post">
           <div>
             <label htmlFor="email">Email address</label>
@@ -129,6 +131,16 @@ export default function LoginPage() {
                 <div id="password-error">{actionData.errors.password}</div>
               )}
             </div>
+          </div>
+
+          <div>
+            <Link
+              to={{
+                pathname: "/reset-password",
+              }}
+            >
+              Reset password
+            </Link>
           </div>
 
           <input type="hidden" name="redirectTo" value={redirectTo} />

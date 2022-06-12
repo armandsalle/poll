@@ -4,17 +4,18 @@ import { forwardRef } from "react";
 import { Outlet } from "./outlet";
 
 type InputProps = ComponentProps<"input"> & {
+  label: string;
   name: string;
   hasError?: string;
   required?: boolean;
 };
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ name, hasError, ...rest }, ref) => {
+  ({ label, name, hasError, ...rest }, ref) => {
     return (
       <div>
         <Outlet as="label" vertical={4} align="start">
-          <span>{name}: </span>
+          <span>{label}: </span>
           <input
             ref={ref}
             name={name}

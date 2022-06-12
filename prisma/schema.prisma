@@ -20,13 +20,22 @@ model UserRegistration {
   valid     Boolean  @default(false)
 }
 
+model NewPasswordRequest {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  token     String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId    String
+}
+
 model User {
-  id       String    @id @default(cuid())
-  email    String    @unique
-  name     String
-  role     ROLE      @default(USER)
-  password Password?
-  sessions Session[]
+  id                  String               @id @default(cuid())
+  email               String               @unique
+  name                String
+  role                ROLE                 @default(USER)
+  password            Password?
+  sessions            Session[]
+  newPasswordRequests NewPasswordRequest[]
 
   confirmToken     String?
   confirmedEmail   Boolean  @default(false)
